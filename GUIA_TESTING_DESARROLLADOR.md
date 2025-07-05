@@ -31,11 +31,11 @@ Antes de ejecutar las pruebas, asegúrate de que los servicios estén corriendo:
 ```bash
 # Frontend (Angular)
 cd redDinamica-client
-ng serve
+npm run start
 
 # Backend (Node.js)
 cd RedDinamica2-api
-npm start
+npm run dev
 ```
 
 ---
@@ -44,7 +44,7 @@ npm start
 
 ### Crear el archivo .env
 
-En la carpeta `automated-tests`, crea un archivo llamado `.env` con la siguiente configuración:
+En la carpeta `automated-test-reddinamica`, crea un archivo llamado `.env` con la siguiente configuración:
 
 ```env
 # URLs de los servicios
@@ -92,7 +92,7 @@ BROWSER_HEIGHT=768
 ### Primera Instalación
 
 ```bash
-cd automated-tests
+cd automated-test-reddinamica
 npm install
 ```
 
@@ -102,7 +102,7 @@ Si por alguna razón se elimina la carpeta `node_modules`, sigue estos pasos:
 
 ```bash
 # 1. Navegar a la carpeta de pruebas
-cd automated-tests
+cd automated-test-reddinamica
 
 # 2. Limpiar cache de npm (opcional pero recomendado)
 npm cache clean --force
@@ -317,7 +317,7 @@ FAIL tests/user-lifecycle.test.js (94.952 s)
 ### Ubicación de Archivos
 
 ```
-automated-tests/
+automated-test-reddinamica/
 ├── screenshots/           # Screenshots automáticos
 │   ├── simple_test_frontend.png
 │   ├── user_registration_complete.png
