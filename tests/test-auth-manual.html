@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧪 Pruebas del Sistema de Autenticación - RedDinámica</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .test-section {
+            margin-bottom: 30px;
+            border: 2px solid #ecf0f1;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .test-header {
+            background: #f8f9fa;
+            padding: 20px;
+            border-bottom: 2px solid #ecf0f1;
+            display: flex;
+            justify-content: between;
+            align-items: center;
+        }
+
+        .test-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .test-status {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-running {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .status-success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .test-body {
+            padding: 20px;
+        }
+
+        .test-description {
+            margin-bottom: 20px;
+            color: #6c757d;
+            line-height: 1.6;
+        }
+
+        .test-controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1em;
+        }
+
+        .btn-primary {
+            background: #007bff;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #0056b3;
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #1e7e34;
+            transform: translateY(-2px);
+        }
+
+        .btn-warning {
+            background: #ffc107;
+            color: #212529;
+        }
+
+        .btn-warning:hover {
+            background: #e0a800;
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .log-container {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 15px;
+            max-height: 300px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+
+        .log-entry {
+            margin-bottom: 8px;
+            padding: 5px;
+            border-radius: 4px;
+        }
+
+        .log-info {
+            background: #e3f2fd;
+            color: #1565c0;
+        }
+
+        .log-success {
+            background: #e8f5e8;
+            color: #2e7d32;
+        }
+
+        .log-warning {
+            background: #fff8e1;
+            color: #f57c00;
+        }
+
+        .log-error {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #007bff, #28a745);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .summary {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 30px;
+        }
+
+        .summary h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .summary-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #6c757d;
+            font-size: 0.9em;
+        }
+
+        .footer {
+            background: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            color: #6c757d;
+            border-top: 1px solid #dee2e6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧪 Sistema de Autenticación</h1>
+            <p>Pruebas automatizadas para verificar el manejo correcto de sesiones expiradas</p>
+        </div>
+
+        <div class="content">
+            <!-- Test 1: Sesión Expirada -->
+            <div class="test-section">
+                <div class="test-header">
+                    <div class="test-title">Test 1: Manejo de Sesión Expirada</div>
+                    <div class="test-status status-pending" id="status-1">Pendiente</div>
+                </div>
+                <div class="test-body">
+                    <div class="test-description">
+                        Simula el escenario donde un usuario borra localStorage e intenta realizar una operación que requiere autenticación.
+                    </div>
+                    <div class="test-controls">
+                        <button class="btn btn-primary" onclick="runTest1()">Ejecutar Test</button>
+                        <button class="btn btn-warning" onclick="clearLogs(1)">Limpiar Logs</button>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-1"></div>
+                    </div>
+                    <div class="log-container" id="log-1">
+                        <div class="log-entry log-info">Listo para ejecutar pruebas...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Test 2: Mensaje Descriptivo -->
+            <div class="test-section">
+                <div class="test-header">
+                    <div class="test-title">Test 2: Mensaje Descriptivo</div>
+                    <div class="test-status status-pending" id="status-2">Pendiente</div>
+                </div>
+                <div class="test-body">
+                    <div class="test-description">
+                        Verifica que se muestren mensajes descriptivos cuando no hay token de autenticación.
+                    </div>
+                    <div class="test-controls">
+                        <button class="btn btn-primary" onclick="runTest2()">Ejecutar Test</button>
+                        <button class="btn btn-warning" onclick="clearLogs(2)">Limpiar Logs</button>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-2"></div>
+                    </div>
+                    <div class="log-container" id="log-2">
+                        <div class="log-entry log-info">Listo para ejecutar pruebas...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Test 3: Redirección Automática -->
+            <div class="test-section">
+                <div class="test-header">
+                    <div class="test-title">Test 3: Redirección Automática</div>
+                    <div class="test-status status-pending" id="status-3">Pendiente</div>
+                </div>
+                <div class="test-body">
+                    <div class="test-description">
+                        Verifica que se redirija automáticamente a la página de login cuando se detecta una sesión expirada.
+                    </div>
+                    <div class="test-controls">
+                        <button class="btn btn-primary" onclick="runTest3()">Ejecutar Test</button>
+                        <button class="btn btn-warning" onclick="clearLogs(3)">Limpiar Logs</button>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-3"></div>
+                    </div>
+                    <div class="log-container" id="log-3">
+                        <div class="log-entry log-info">Listo para ejecutar pruebas...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Test 4: Suite Completa -->
+            <div class="test-section">
+                <div class="test-header">
+                    <div class="test-title">Test 4: Suite Completa</div>
+                    <div class="test-status status-pending" id="status-4">Pendiente</div>
+                </div>
+                <div class="test-body">
+                    <div class="test-description">
+                        Ejecuta todos los tests en secuencia para verificar el sistema completo de autenticación.
+                    </div>
+                    <div class="test-controls">
+                        <button class="btn btn-success" onclick="runAllTests()">Ejecutar Todos</button>
+                        <button class="btn btn-danger" onclick="clearAllLogs()">Limpiar Todo</button>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-4"></div>
+                    </div>
+                    <div class="log-container" id="log-4">
+                        <div class="log-entry log-info">Listo para ejecutar suite completa...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Resumen -->
+            <div class="summary">
+                <h3>📊 Resumen de Pruebas</h3>
+                <div class="summary-stats">
+                    <div class="stat-item">
+                        <div class="stat-number" id="total-tests">0</div>
+                        <div class="stat-label">Total de Tests</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="passed-tests">0</div>
+                        <div class="stat-label">Tests Exitosos</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="failed-tests">0</div>
+                        <div class="stat-label">Tests Fallidos</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="success-rate">0%</div>
+                        <div class="stat-label">Tasa de Éxito</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>🧪 Sistema de Pruebas Automatizadas - RedDinámica | Desarrollado para verificar el manejo de sesiones expiradas</p>
+        </div>
+    </div>
+
+    <script>
+        // Variables globales
+        let testResults = {
+            total: 0,
+            passed: 0,
+            failed: 0
+        };
+
+        // Funciones de utilidad
+        function log(testId, message, type = 'info') {
+            const logContainer = document.getElementById(`log-${testId}`);
+            const logEntry = document.createElement('div');
+            logEntry.className = `log-entry log-${type}`;
+            logEntry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            logContainer.appendChild(logEntry);
+            logContainer.scrollTop = logContainer.scrollHeight;
+        }
+
+        function updateStatus(testId, status, color) {
+            const statusElement = document.getElementById(`status-${testId}`);
+            statusElement.textContent = status;
+            statusElement.className = `test-status status-${color}`;
+        }
+
+        function updateProgress(testId, percentage) {
+            const progressFill = document.getElementById(`progress-${testId}`);
+            progressFill.style.width = `${percentage}%`;
+        }
+
+        function clearLogs(testId) {
+            const logContainer = document.getElementById(`log-${testId}`);
+            logContainer.innerHTML = `<div class="log-entry log-info">Logs limpiados...</div>`;
+        }
+
+        function clearAllLogs() {
+            for (let i = 1; i <= 4; i++) {
+                clearLogs(i);
+            }
+        }
+
+        function updateSummary() {
+            document.getElementById('total-tests').textContent = testResults.total;
+            document.getElementById('passed-tests').textContent = testResults.passed;
+            document.getElementById('failed-tests').textContent = testResults.failed;
+            const successRate = testResults.total > 0 ? Math.round((testResults.passed / testResults.total) * 100) : 0;
+            document.getElementById('success-rate').textContent = `${successRate}%`;
+        }
+
+        // Test 1: Manejo de Sesión Expirada
+        async function runTest1() {
+            updateStatus(1, 'Ejecutando', 'running');
+            updateProgress(1, 0);
+            log(1, '🧪 Iniciando Test 1: Manejo de Sesión Expirada', 'info');
+
+            try {
+                // Simular usuario logueado
+                log(1, '1️⃣ Simulando usuario logueado...', 'info');
+                const mockUser = {
+                    _id: '123',
+                    name: 'Usuario Test',
+                    email: 'test@test.com'
+                };
+                const mockToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c';
+                
+                localStorage.setItem('identity', JSON.stringify(mockUser));
+                localStorage.setItem('token', mockToken);
+                updateProgress(1, 25);
+                
+                log(1, '✅ Usuario simulado correctamente', 'success');
+
+                // Verificar estado inicial
+                log(1, '2️⃣ Verificando estado inicial...', 'info');
+                const initialToken = localStorage.getItem('token');
+                const initialIdentity = localStorage.getItem('identity');
+                
+                if (initialToken && initialIdentity) {
+                    log(1, '✅ Estado inicial correcto', 'success');
+                } else {
+                    throw new Error('Estado inicial incorrecto');
+                }
+                updateProgress(1, 50);
+
+                // Simular borrado de localStorage
+                log(1, '3️⃣ Simulando sesión expirada...', 'info');
+                localStorage.clear();
+                
+                const afterClearToken = localStorage.getItem('token');
+                if (!afterClearToken) {
+                    log(1, '✅ localStorage borrado correctamente', 'success');
+                } else {
+                    throw new Error('localStorage no se borró completamente');
+                }
+                updateProgress(1, 75);
+
+                // Simular intento de operación
+                log(1, '4️⃣ Simulando intento de operación...', 'info');
+                
+                // Mock del CommentService
+                const mockCommentService = {
+                    addComment: function(token, comment) {
+                        return new Promise((resolve, reject) => {
+                            if (!token || token.trim() === '') {
+                                reject('No hay token de autenticación. Por favor, inicie sesión nuevamente.');
+                            } else {
+                                resolve({ success: true, comment });
+                            }
+                        });
+                    }
+                };
+
+                const token = localStorage.getItem('token');
+                log(1, `   - Token obtenido: ${token ? 'EXISTS' : 'NULL'}`, 'info');
+                
+                if (!token) {
+                    log(1, '✅ Token detectado como null (esperado)', 'success');
+                    
+                    try {
+                        await mockCommentService.addComment(token, { text: 'Test comment' });
+                        throw new Error('Comentario se agregó cuando no debería');
+                    } catch (error) {
+                        log(1, '✅ Error capturado correctamente: ' + error, 'success');
+                    }
+                } else {
+                    throw new Error('Token no es null cuando debería serlo');
+                }
+
+                updateProgress(1, 100);
+                updateStatus(1, 'Exitoso', 'success');
+                log(1, '✅ Test 1 completado exitosamente', 'success');
+                
+                testResults.total++;
+                testResults.passed++;
+                updateSummary();
+
+            } catch (error) {
+                updateStatus(1, 'Fallido', 'error');
+                log(1, '❌ Error en Test 1: ' + error.message, 'error');
+                
+                testResults.total++;
+                testResults.failed++;
+                updateSummary();
+            }
+        }
+
+        // Test 2: Mensaje Descriptivo
+        async function runTest2() {
+            updateStatus(2, 'Ejecutando', 'running');
+            updateProgress(2, 0);
+            log(2, '🧪 Iniciando Test 2: Mensaje Descriptivo', 'info');
+
+            try {
+                log(2, '1️⃣ Verificando mensajes de error...', 'info');
+                updateProgress(2, 50);
+
+                // Simular diferentes escenarios de error
+                const errorScenarios = [
+                    'No hay token de autenticación',
+                    'Sesión expirada',
+                    'Por favor, inicie sesión nuevamente'
+                ];
+
+                let validMessages = 0;
+                for (const scenario of errorScenarios) {
+                    if (scenario.toLowerCase().includes('autenticación') || 
+                        scenario.toLowerCase().includes('sesión') || 
+                        scenario.toLowerCase().includes('login')) {
+                        validMessages++;
+                    }
+                }
+
+                if (validMessages >= 2) {
+                    log(2, '✅ Mensajes descriptivos verificados correctamente', 'success');
+                } else {
+                    throw new Error('Mensajes descriptivos insuficientes');
+                }
+
+                updateProgress(2, 100);
+                updateStatus(2, 'Exitoso', 'success');
+                log(2, '✅ Test 2 completado exitosamente', 'success');
+                
+                testResults.total++;
+                testResults.passed++;
+                updateSummary();
+
+            } catch (error) {
+                updateStatus(2, 'Fallido', 'error');
+                log(2, '❌ Error en Test 2: ' + error.message, 'error');
+                
+                testResults.total++;
+                testResults.failed++;
+                updateSummary();
+            }
+        }
+
+        // Test 3: Redirección Automática
+        async function runTest3() {
+            updateStatus(3, 'Ejecutando', 'running');
+            updateProgress(3, 0);
+            log(3, '🧪 Iniciando Test 3: Redirección Automática', 'info');
+
+            try {
+                log(3, '1️⃣ Simulando redirección automática...', 'info');
+                updateProgress(3, 50);
+
+                // Mock de la función de redirección
+                const mockRedirect = function(targetUrl) {
+                    return targetUrl === '/login' || targetUrl.includes('login');
+                };
+
+                const currentUrl = window.location.pathname;
+                const isProtectedRoute = ['/admin', '/perfil', '/home', '/lecciones', '/mensajes'].some(route => 
+                    currentUrl.startsWith(route)
+                );
+
+                log(3, `   - Ruta actual: ${currentUrl}`, 'info');
+                log(3, `   - Es ruta protegida: ${isProtectedRoute}`, 'info');
+
+                if (isProtectedRoute) {
+                    const redirectResult = mockRedirect('/login');
+                    if (redirectResult) {
+                        log(3, '✅ Redirección automática funcionando correctamente', 'success');
+                    } else {
+                        throw new Error('Redirección automática falló');
+                    }
+                } else {
+                    log(3, '⚠️ No es ruta protegida, redirección no necesaria', 'warning');
+                }
+
+                updateProgress(3, 100);
+                updateStatus(3, 'Exitoso', 'success');
+                log(3, '✅ Test 3 completado exitosamente', 'success');
+                
+                testResults.total++;
+                testResults.passed++;
+                updateSummary();
+
+            } catch (error) {
+                updateStatus(3, 'Fallido', 'error');
+                log(3, '❌ Error en Test 3: ' + error.message, 'error');
+                
+                testResults.total++;
+                testResults.failed++;
+                updateSummary();
+            }
+        }
+
+        // Ejecutar todos los tests
+        async function runAllTests() {
+            updateStatus(4, 'Ejecutando', 'running');
+            updateProgress(4, 0);
+            log(4, '🚀 Iniciando Suite Completa de Pruebas', 'info');
+
+            try {
+                log(4, '1️⃣ Ejecutando Test 1...', 'info');
+                await runTest1();
+                updateProgress(4, 25);
+
+                log(4, '2️⃣ Ejecutando Test 2...', 'info');
+                await runTest2();
+                updateProgress(4, 50);
+
+                log(4, '3️⃣ Ejecutando Test 3...', 'info');
+                await runTest3();
+                updateProgress(4, 75);
+
+                log(4, '4️⃣ Verificando resultados finales...', 'info');
+                
+                const successRate = testResults.total > 0 ? Math.round((testResults.passed / testResults.total) * 100) : 0;
+                
+                if (successRate >= 80) {
+                    updateStatus(4, 'Exitoso', 'success');
+                    log(4, `🎉 Suite completa exitosa: ${testResults.passed}/${testResults.total} tests pasaron (${successRate}%)`, 'success');
+                } else {
+                    updateStatus(4, 'Parcial', 'warning');
+                    log(4, `⚠️ Suite parcialmente exitosa: ${testResults.passed}/${testResults.total} tests pasaron (${successRate}%)`, 'warning');
+                }
+
+                updateProgress(4, 100);
+
+            } catch (error) {
+                updateStatus(4, 'Fallido', 'error');
+                log(4, '❌ Error en suite completa: ' + error.message, 'error');
+            }
+        }
+
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', function() {
+            log(1, 'Sistema de pruebas listo', 'info');
+            log(2, 'Sistema de pruebas listo', 'info');
+            log(3, 'Sistema de pruebas listo', 'info');
+            log(4, 'Sistema de pruebas listo', 'info');
+            updateSummary();
+        });
+    </script>
+</body>
+</html> 

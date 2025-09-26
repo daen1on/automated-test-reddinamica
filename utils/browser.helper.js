@@ -153,6 +153,23 @@ class BrowserHelper {
       localStorage.clear();
     });
   }
+
+  async waitForTimeout(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  async getText(selector) {
+    await this.waitForSelector(selector);
+    const text = await this.page.$eval(selector, el => el.textContent.trim());
+    console.log(`Got text from ${selector}: ${text}`);
+    return text;
+  }
+
+  async select(selector, value) {
+    await this.waitForSelector(selector);
+    await this.page.select(selector, value);
+    console.log(`Selected "${value}" in ${selector}`);
+  }
 }
 
 module.exports = BrowserHelper;
