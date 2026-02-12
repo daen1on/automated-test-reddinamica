@@ -40,11 +40,11 @@ describe('Sistema de Notificaciones de Recursos', () => {
 
     // ===== PASO 1: LOGIN COMO USUARIO REGULAR =====
     console.log('1️⃣ Haciendo login como usuario regular...');
-    await browserHelper.goto('http://localhost:4200/login');
+    await browserHelper.goto('http://localhost:4200/#/login');
     
     // Usar credenciales de usuario de prueba (ajustar según tu configuración)
     await browserHelper.type('#email', 'vidagumfacilitador@test.co');
-    await browserHelper.type('#password', 'test123');
+    await browserHelper.type('#password', '123456');
     await browserHelper.click('button[type="submit"]');
     
     // Esperar a que se complete el login
@@ -53,7 +53,7 @@ describe('Sistema de Notificaciones de Recursos', () => {
 
     // ===== PASO 2: NAVEGAR A RECURSOS =====
     console.log('2️⃣ Navegando a la sección de recursos...');
-    await browserHelper.goto('http://localhost:4200/inicio/recursos');
+    await browserHelper.goto('http://localhost:4200/#/inicio/recursos');
     await browserHelper.waitForSelector('.card', { timeout: 10000 });
     console.log('✅ Navegación exitosa a recursos');
 
@@ -100,7 +100,7 @@ describe('Sistema de Notificaciones de Recursos', () => {
 
     // ===== PASO 7: LOGIN COMO ADMINISTRADOR =====
     console.log('7️⃣ Haciendo login como administrador...');
-    await adminBrowserHelper.goto('http://localhost:4200/login');
+    await adminBrowserHelper.goto('http://localhost:4200/#/login');
     
     // Limpiar localStorage previo
     await adminBrowserHelper.page.evaluate(() => {
@@ -109,8 +109,8 @@ describe('Sistema de Notificaciones de Recursos', () => {
     });
     
     // Login admin
-    await adminBrowserHelper.type('#email', 'admin@reddinamica.com');
-    await adminBrowserHelper.type('#password', 'admin123');
+    await adminBrowserHelper.type('#email', 'reddinamica.simon@gmail.com');
+    await adminBrowserHelper.type('#password', 'gfrdgqvxfwgctksx');
     await adminBrowserHelper.click('button[type="submit"]');
     
     await adminBrowserHelper.waitForSelector('.navbar', { timeout: 15000 });
@@ -130,7 +130,7 @@ describe('Sistema de Notificaciones de Recursos', () => {
 
     // ===== PASO 9: APROBAR RECURSO =====
     console.log('9️⃣ Navegando a panel de admin para aprobar recurso...');
-    await adminBrowserHelper.goto('http://localhost:4200/admin/recursos');
+    await adminBrowserHelper.goto('http://localhost:4200/#/admin/recursos');
     await adminBrowserHelper.waitForSelector('.card', { timeout: 10000 });
     
     // Buscar el recurso recién creado y aprobarlo
@@ -185,7 +185,7 @@ describe('Sistema de Notificaciones de Recursos', () => {
     
     // ===== PASO 11: VERIFICAR VISIBILIDAD DEL RECURSO =====
     console.log('1️⃣1️⃣ Verificando que el recurso sea visible...');
-    await browserHelper.goto('http://localhost:4200/inicio/recursos');
+    await browserHelper.goto('http://localhost:4200/#/inicio/recursos');
     await browserHelper.waitForSelector('.card', { timeout: 10000 });
     
     const resourcesPage = await browserHelper.page.content();
@@ -200,14 +200,14 @@ describe('Sistema de Notificaciones de Recursos', () => {
     console.log('🧪 Iniciando prueba de manejo de errores...');
 
     // Login como usuario
-    await browserHelper.goto('http://localhost:4200/login');
+    await browserHelper.goto('http://localhost:4200/#/login');
     await browserHelper.type('#email', 'vidagumfacilitador@test.co');
-    await browserHelper.type('#password', 'test123');
+    await browserHelper.type('#password', '123456');
     await browserHelper.click('button[type="submit"]');
     await browserHelper.waitForSelector('.navbar', { timeout: 15000 });
 
     // Navegar a recursos
-    await browserHelper.goto('http://localhost:4200/inicio/recursos');
+    await browserHelper.goto('http://localhost:4200/#/inicio/recursos');
     await browserHelper.waitForSelector('.card', { timeout: 10000 });
 
     // Abrir modal
@@ -228,14 +228,14 @@ describe('Sistema de Notificaciones de Recursos', () => {
     console.log('🧪 Verificando estado de recursos pendientes...');
 
     // Login como usuario
-    await browserHelper.goto('http://localhost:4200/login');
+    await browserHelper.goto('http://localhost:4200/#/login');
     await browserHelper.type('#email', 'vidagumfacilitador@test.co');
-    await browserHelper.type('#password', 'test123');
+    await browserHelper.type('#password', '123456');
     await browserHelper.click('button[type="submit"]');
     await browserHelper.waitForSelector('.navbar', { timeout: 15000 });
 
     // Ir a recursos
-    await browserHelper.goto('http://localhost:4200/inicio/recursos');
+    await browserHelper.goto('http://localhost:4200/#/inicio/recursos');
     await browserHelper.waitForSelector('.card', { timeout: 10000 });
 
     // Verificar si hay recursos con badge "Pendiente de aprobación"
@@ -259,15 +259,15 @@ describe('Sistema de Notificaciones de Recursos', () => {
 
     // ===== LOGIN COMO USUARIO =====
     console.log('1️⃣ Login como usuario...');
-    await browserHelper.goto('http://localhost:4200/login');
+    await browserHelper.goto('http://localhost:4200/#/login');
     await browserHelper.type('#email', 'vidagumfacilitador@test.co');
-    await browserHelper.type('#password', 'test123');
+    await browserHelper.type('#password', '123456');
     await browserHelper.click('button[type="submit"]');
     await browserHelper.waitForSelector('.navbar', { timeout: 15000 });
 
     // ===== CREAR RECURSO SIMPLE =====
     console.log('2️⃣ Creando recurso de prueba...');
-    await browserHelper.goto('http://localhost:4200/inicio/recursos');
+    await browserHelper.goto('http://localhost:4200/#/inicio/recursos');
     await browserHelper.waitForSelector('.card', { timeout: 10000 });
     
     // Verificar que existe el botón de crear recurso
@@ -308,7 +308,7 @@ describe('Sistema de Notificaciones de Recursos', () => {
 
     // ===== VERIFICAR QUE EL RECURSO APARECE EN LA LISTA =====
     console.log('4️⃣ Verificando que el recurso aparece en la lista...');
-    await browserHelper.goto('http://localhost:4200/inicio/recursos');
+    await browserHelper.goto('http://localhost:4200/#/inicio/recursos');
     await browserHelper.waitForSelector('.card', { timeout: 10000 });
     
     const pageContent = await browserHelper.page.content();
@@ -326,9 +326,9 @@ describe('Sistema de Notificaciones de Recursos', () => {
     console.log('🧪 Test de estadísticas de notificaciones...');
 
     // Login
-    await browserHelper.goto('http://localhost:4200/login');
+    await browserHelper.goto('http://localhost:4200/#/login');
     await browserHelper.type('#email', 'vidagumfacilitador@test.co');
-    await browserHelper.type('#password', 'test123');
+    await browserHelper.type('#password', '123456');
     await browserHelper.click('button[type="submit"]');
     await browserHelper.waitForSelector('.navbar', { timeout: 15000 });
 
